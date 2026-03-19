@@ -3,6 +3,7 @@ This application allows users to generate music using AI, manage their generated
 
 
 <h1> Running the application </h1>
+Make sure you are in the directory : KUProject
 Run the following command :  
 <b> python manage.py runserver </b>
 Now that the server’s running, visit http://127.0.0.1:8000/ with your web browser.
