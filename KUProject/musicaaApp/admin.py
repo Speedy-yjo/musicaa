@@ -1,5 +1,8 @@
 from django.contrib import admin
-from .models import User, Song, Playlist, Form
+from .model.user import User
+from .model.song import Song
+from .model.playlist import Playlist
+from .model.form import Form
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
