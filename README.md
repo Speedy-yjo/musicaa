@@ -4,7 +4,7 @@ This application allows users to generate music using AI, manage their generated
 
 # Setup the application
   ```
-  git clone https://github.com/Speedy-yjo/musicaa <br/>
+  git clone https://github.com/Speedy-yjo/musicaa
   cd musicaa/KUProject
 ```
 # Instruction how to activate virtual environment
@@ -35,4 +35,4 @@ Run the following command :  <br/>
 ```
 python manage.py runserver
 ```
-Now that the server’s running, visit http://127.0.0.1:8000/ with your web browser, and http://127.0.0.1:8000/admin to reach admin page.
+Now that the server’s running, visit http://127.0.0.1:8000/ with your web browser, and http://127.0.0.1:8000/admin/ to reach admin page.
