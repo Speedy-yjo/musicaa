@@ -3,30 +3,25 @@ This application allows users to generate music using AI, manage their generated
 
 
 # Setup the application
-<p>
-  git clone https://github.com/Speedy-yjo/musicaa
+  git clone https://github.com/Speedy-yjo/musicaa <br/>
   cd musicaa/KUProject
-</p>
 
 # Instruction how to activate virtual environment
-<p>
-  python3 -m venv venv
+  python3 -m venv venv <br/>
   source venv/bin/activate
-</p>
 
 # Install dependencies (in case of no django or required libraries aren't installed on the machine the clone this repo)
-<p> pip install django </p>
+pip install django
 
 # How to migrate
-<p> python manage.py migrate </p>
+python manage.py migrate
 
 # How to create super user
-<p> python manage.py createsuperuser 
-  And follow instructions (give your email address and choose a password).
-</p>
+python manage.py createsuperuser <br/>
+And follow instructions (give your email address and choose a password).
 
 # How to run and navigate to admin page
-Make sure you are in the directory : KUProject
-Run the following command :  
-<b> python manage.py runserver </b>
+Make sure you are in the directory : KUProject <br/>
+Run the following command :  <br/>
+<b> python manage.py runserver </b> <br/>
 Now that the server’s running, visit http://127.0.0.1:8000/ with your web browser.
