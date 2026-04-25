@@ -39,6 +39,11 @@ This application allows users to generate music using AI, manage their generated
    GOOGLE_CLIENT_SECRET=your-google-client-secret
    ```
 
+   When you want to generate a song using the Suno API, you need to set the `GENERATOR_STRATEGY` environment variable to `suno`. You also need to provide the Suno API token by setting the `SUNO_API_TOKEN` environment variable.
+
+   When you want to generate a song using the mock strategy, you need to set the `GENERATOR_STRATEGY` environment variable to `mock`. 
+   
+
 5. **Run migrations:**
    ```bash
    python manage.py migrate
