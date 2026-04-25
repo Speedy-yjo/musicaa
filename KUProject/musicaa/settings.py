@@ -11,6 +11,10 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,10 +24,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_)2^m9n)8tq^jj)7ic_3&aqcj729vq^-6ptiv&t5q1(a&l6lhd'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-_)2^m9n)8tq^jj)7ic_3&aqcj729vq^-6ptiv&t5q1(a&l6lhd')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = []
 
@@ -127,9 +131,8 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Strategy API
-import os
-GENERATOR_STRATEGY = os.getenv('GENERATOR_STRATEGY', 'mock')  # suno
-SUNO_API_KEY = os.getenv('SUNO_API_KEY', '8a96becba633b101adda3ba9018a9acc')
+GENERATOR_STRATEGY = os.getenv('GENERATOR_STRATEGY', 'mock')
+SUNO_API_KEY = os.getenv('SUNO_API_TOKEN', '8a96becba633b101adda3ba9018a9acc')
 
 # Allauth Settings
 SITE_ID = 1
@@ -146,6 +149,11 @@ LOGOUT_REDIRECT_URL = '/'
 ACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
+        'APP': {
+            'client_id': os.getenv('GOOGLE_CLIENT_ID', ''),
+            'secret': os.getenv('GOOGLE_CLIENT_SECRET', ''),
+            'key': ''
+        },
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online'}
     }
