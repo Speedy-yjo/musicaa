@@ -4,7 +4,9 @@ Welcome to the Musicaa project.
 The platform Musicaa will use two external API : 
 1. Google OAuth: The only way for a user to authenticate
 2. AI music generator Suno API : will be called when generating the audio with as entries, the information given by the user.
+
 For development purposes, a mock strategy has been created that will generate a song without calling the Suno API.
+
 This application allows users to generate music using AI, manage their generated songs in a private library, and listen to and share songs.
 
 ## Project Setup
