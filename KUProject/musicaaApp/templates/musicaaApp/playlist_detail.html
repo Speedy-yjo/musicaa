@@ -1,0 +1,56 @@
+{% extends 'musicaaApp/base.html' %}
+
+{% block content %}
+<div class="header-section" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+    <div>
+        <a href="{% url 'playlists' %}" style="color: #64748b; text-decoration: none; font-size: 0.9rem;">&larr; Back to Playlists</a>
+        <h2 style="margin: 0.5rem 0 0 0;">{{ playlist.name }}</h2>
+    </div>
+</div>
+
+{% if playlist.songs.exists %}
+<div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.5rem;">
+    {% for song in playlist.songs.all %}
+    <div class="card" style="padding: 1.5rem; margin-bottom: 0; display: flex; flex-direction: column;">
+        <h3 style="font-size: 1.25rem; font-weight: 600; margin: 0 0 0.5rem 0;">{{ song.name }}</h3>
+        <div style="font-size: 0.9rem; color: #64748b; margin-bottom: 1rem;">
+            Created: {{ song.dateOfCreation|date:"M d, Y" }} &bull; {{ song.lengthInSeconds }}s
+        </div>
+        
+        {% if song.status == 'ready' %}
+            {% if song.audio_url %}
+            <button type="button" class="btn play-btn" data-url="{{ song.audio_url }}" data-title="{{ song.name }}" data-duration="{{ song.lengthInSeconds }}" style="margin-top: auto; margin-bottom: 1rem; width: 100%;">
+                ▶ Play Song
+            </button>
+            {% elif song.track %}
+            <button type="button" class="btn play-btn" data-url="{{ song.track.url }}" data-title="{{ song.name }}" data-duration="{{ song.lengthInSeconds }}" style="margin-top: auto; margin-bottom: 1rem; width: 100%;">
+                ▶ Play Song
+            </button>
+            {% endif %}
+        {% elif song.status == 'generating' %}
+        <div class="status-generating" style="margin-top: auto; margin-bottom: 1rem; padding: 0.5rem; background: #fef3c7; color: #92400e; border-radius: 6px; text-align: center; font-size: 0.9rem;">
+            Status: Generating
+        </div>
+        {% else %}
+        <div style="margin-top: auto; margin-bottom: 1rem; padding: 0.5rem; background: #fee2e2; color: #b91c1c; border-radius: 6px; text-align: center; font-size: 0.9rem;">
+            Status: Unavailable
+        </div>
+        {% endif %}
+        
+        <form method="POST" action="{% url 'remove_from_playlist' playlist.id song.id %}">
+            {% csrf_token %}
+            <button type="submit" style="width: 100%; padding: 0.5rem; background: #fff; border: 1px solid #ef4444; color: #ef4444; border-radius: 6px; cursor: pointer; transition: all 0.2s;">
+                Remove from Playlist
+            </button>
+        </form>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div style="text-align: center; padding: 4rem; background: var(--card-bg); border-radius: 12px; border: 2px dashed var(--border-light);">
+    <h3 style="margin-top: 0;">This playlist is empty</h3>
+    <p style="color: #64748b; margin-bottom: 2rem;">Go to your library to add songs to this playlist.</p>
+    <a href="{% url 'library' %}" class="btn">Browse Library</a>
+</div>
+{% endif %}
+{% endblock %}

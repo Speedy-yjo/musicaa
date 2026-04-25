@@ -1,0 +1,119 @@
+{% extends 'musicaaApp/base.html' %}
+
+{% block content %}
+<style>
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text-color);
+    }
+    
+    .form-control, .form-check-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid var(--border-light);
+        border-radius: 8px;
+        font-family: inherit;
+        background-color: #fafbfc;
+        box-sizing: border-box;
+        transition: border-color 0.2s;
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-accent);
+    }
+    
+    .form-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    
+    .full-width {
+        grid-column: 1 / -1;
+    }
+    
+    .checkbox-wrap {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 1.5rem;
+    }
+    
+    .checkbox-wrap label {
+        margin: 0;
+    }
+    .checkbox-wrap input {
+        width: auto;
+    }
+</style>
+
+<h2>Create a New Song</h2>
+<p style="color: #64748b; margin-bottom: 2rem;">Fill out the properties below. The Strategy pattern backend will handle the rest!</p>
+
+<div class="card">
+    {% if form.errors %}
+    <div style="background-color: #fee2e2; color: #b91c1c; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+        <strong>Please correct the following errors:</strong>
+        <ul style="margin: 0.5rem 0 0 0; padding-left: 1.5rem;">
+        {% for field in form %}
+            {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+            <li>{{ error }}</li>
+        {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <div class="form-wrap">
+            <div class="form-group full-width">
+                <label for="id_name">Song Title</label>
+                {{ form.name }}
+            </div>
+            
+            <div class="form-group full-width">
+                <label for="id_prompt">Creative Prompt</label>
+                {{ form.prompt }}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_mood">Mood</label>
+                {{ form.mood }}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_genre">Genre</label>
+                {{ form.genre }}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_occasion">Occasion</label>
+                {{ form.occasion }}
+            </div>
+            
+            <div class="form-group">
+                <label for="id_lengthInSeconds">Length (seconds)</label>
+                {{ form.lengthInSeconds }}
+            </div>
+        </div>
+
+        <div class="checkbox-wrap">
+            {{ form.singerIsMale }}
+            <label for="id_singerIsMale">Make the singer Male</label>
+        </div>
+        
+        <button type="submit" class="btn" style="width: 100%; padding: 1rem; font-size: 1.1rem;">Submit Generation Task</button>
+    </form>
+</div>
+{% endblock %}

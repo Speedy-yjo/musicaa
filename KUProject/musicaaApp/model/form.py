@@ -1,6 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
-from .user import User
+from django.contrib.auth.models import User
 from .song import Song
 
 class Form(models.Model):
@@ -25,10 +25,10 @@ class Form(models.Model):
         BIRTHDAY = 'birthday', 'Birthday'
 
     name = models.CharField(max_length=255)
-    mood = models.CharField(max_length=20, choices=Mood.choices)
-    genre = models.CharField(max_length=20, choices=Genre.choices)
-    occasion = models.CharField(max_length=20, choices=Occasion.choices)
-    prompt = models.TextField()
+    mood = models.CharField(max_length=20, choices=Mood.choices, blank=True, null=True)
+    genre = models.CharField(max_length=20, choices=Genre.choices, blank=True, null=True)
+    occasion = models.CharField(max_length=20, choices=Occasion.choices, blank=True, null=True)
+    prompt = models.TextField(blank=True, null=True)
     singerIsMale = models.BooleanField()
     lengthInSeconds = models.PositiveIntegerField()
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='forms')

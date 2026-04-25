@@ -1,0 +1,315 @@
+{% load socialaccount %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Musicaa - AI Song Generation Tool">
+    <title>Musicaa App</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #f7f9fc;
+            --text-color: #2b3044;
+            --primary-accent: #6b4ce6;
+            --primary-hover: #5031cc;
+            --card-bg: #ffffff;
+            --border-light: #e2e8f0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Outfit', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: var(--card-bg);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary-accent);
+            font-weight: 600;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-color);
+            margin-left: 1.5rem;
+            font-weight: 400;
+            transition: color 0.2s ease;
+        }
+
+        nav a:hover {
+            color: var(--primary-accent);
+        }
+
+        .btn {
+            background-color: var(--primary-accent);
+            color: #fff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        main {
+            flex: 1;
+            padding: 3rem 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+            margin-bottom: 2rem;
+            transition: transform 0.2s;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.04);
+        }
+
+        /* Global Player */
+        .global-player {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #ffffff;
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+        .global-player.active {
+            transform: translateY(0);
+        }
+        .player-info {
+            flex: 1;
+            font-weight: 600;
+            color: var(--primary-accent);
+        }
+        .player-controls {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+        }
+        .player-controls button {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-color);
+            transition: color 0.2s;
+        }
+        .player-controls button:hover {
+            color: var(--primary-accent);
+        }
+        .player-progress {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            justify-content: flex-end;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+        .player-progress input {
+            width: 150px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>🎶 Musicaa</h1>
+    <nav style="display: flex; align-items: center;">
+        {% if user.is_authenticated %}
+            <span style="margin-left: 1.5rem; color: #64748b; font-weight: 500;">Hi, {{ user.first_name|default:user.username }}</span>
+            <a href="{% url 'library' %}">My Library</a>
+            <a href="{% url 'playlists' %}">Playlists</a>
+            <a href="{% url 'generate' %}" class="btn">Generate Song</a>
+            <form method="post" action="{% url 'account_logout' %}" style="display:inline; margin-left: 1.5rem;">
+                {% csrf_token %}
+                <button type="submit" style="background:none; border:none; color:var(--text-color); font:inherit; cursor:pointer; padding:0; font-weight: 400; transition: color 0.2s ease;">Logout</button>
+            </form>
+        {% else %}
+            <a href="{% provider_login_url 'google' %}" class="btn" style="background-color: #4285F4;">
+                <svg width="18" height="18" viewBox="0 0 18 18" style="vertical-align: middle; margin-right: 8px;">
+                    <path fill="#fff" d="M17.64,9.2c0-0.637-0.057-1.251-0.164-1.84H9v3.481h4.844c-0.209,1.125-0.843,2.078-1.796,2.717v2.258h2.908C16.658,14.258,17.64,11.945,17.64,9.2z"/>
+                    <path fill="#fff" d="M9,18c2.43,0,4.467-0.806,5.956-2.184l-2.908-2.258c-0.806,0.54-1.837,0.859-3.048,0.859c-2.344,0-4.328-1.583-5.036-3.71H0.957v2.332C2.438,15.983,5.482,18,9,18z"/>
+                    <path fill="#fff" d="M3.964,10.71C3.784,10.17,3.682,9.593,3.682,9s0.102-1.17,0.282-1.71V4.958H0.957C0.347,6.175,0,7.545,0,9s0.348,2.825,0.957,4.042L3.964,10.71z"/>
+                    <path fill="#fff" d="M9,3.58c1.321,0,2.508,0.454,3.44,1.345l2.582-2.58C13.463,0.891,11.426,0,9,0C5.482,0,2.438,2.017,0.957,4.958L3.964,7.29C4.672,5.163,6.656,3.58,9,3.58z"/>
+                </svg>
+                Sign in with Google
+            </a>
+        {% endif %}
+    </nav>
+</header>
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+<div id="global-player" class="global-player">
+    <div class="player-info" id="player-title">Song Title</div>
+    <div class="player-controls">
+        <button id="btn-prev">⏮</button>
+        <button id="btn-playpause">▶</button>
+        <button id="btn-next">⏭</button>
+    </div>
+    <div class="player-progress">
+        <span id="time-current">0:00</span>
+        <input type="range" id="progress-bar" value="0" max="100">
+    </div>
+    <audio id="audio-element" style="display:none;"></audio>
+</div>
+
+<script>
+    const audio = document.getElementById('audio-element');
+    const playPauseBtn = document.getElementById('btn-playpause');
+    const progressBar = document.getElementById('progress-bar');
+    const playerTitle = document.getElementById('player-title');
+    const globalPlayer = document.getElementById('global-player');
+    const timeCurrent = document.getElementById('time-current');
+    
+    // Global Playlist State
+    window.playlistTracks = [];
+    window.currentTrackIndex = -1;
+
+    // Listeners for progress
+    audio.ontimeupdate = () => {
+        let dur = audio.duration;
+        if (!dur || dur === Infinity) {
+            const currentTrack = window.playlistTracks[window.currentTrackIndex];
+            dur = currentTrack ? currentTrack.duration : 0;
+        }
+        
+        if (dur) {
+            progressBar.value = (audio.currentTime / dur) * 100;
+            const mins = Math.floor(audio.currentTime / 60);
+            const secs = Math.floor(audio.currentTime % 60).toString().padStart(2, '0');
+            timeCurrent.innerText = `${mins}:${secs}`;
+        }
+    };
+
+    progressBar.oninput = (e) => {
+        let dur = audio.duration;
+        if (!dur || dur === Infinity) {
+            const currentTrack = window.playlistTracks[window.currentTrackIndex];
+            dur = currentTrack ? currentTrack.duration : 0;
+        }
+        if (dur) {
+            audio.currentTime = (e.target.value / 100) * dur;
+        }
+    };
+
+    audio.onended = () => {
+        document.getElementById('btn-next').click();
+    };
+
+    // Controls
+    playPauseBtn.onclick = () => {
+        if(audio.paused) { 
+            audio.play(); 
+            playPauseBtn.innerText = '⏸'; 
+        } else { 
+            audio.pause(); 
+            playPauseBtn.innerText = '▶'; 
+        }
+    };
+
+    document.getElementById('btn-prev').onclick = () => {
+        if (window.currentTrackIndex > 0) {
+            playTrack(window.currentTrackIndex - 1);
+        }
+    };
+
+    document.getElementById('btn-next').onclick = () => {
+        if (window.currentTrackIndex < window.playlistTracks.length - 1) {
+            playTrack(window.currentTrackIndex + 1);
+        }
+    };
+
+    // Public API to start a song
+    window.playTrack = function(index) {
+        if (index >= 0 && index < window.playlistTracks.length) {
+            window.currentTrackIndex = index;
+            const track = window.playlistTracks[index];
+            audio.src = track.url;
+            playerTitle.innerText = track.title;
+            globalPlayer.classList.add('active');
+            audio.play();
+            playPauseBtn.innerText = '⏸';
+        }
+    };
+
+    // Scan the DOM on load to build the playlist array
+    document.addEventListener('DOMContentLoaded', () => {
+        const playButtons = document.querySelectorAll('.play-btn');
+        playButtons.forEach((btn, idx) => {
+            // Build the virtual playlist array from DOM elements
+            window.playlistTracks.push({
+                title: btn.dataset.title,
+                url: btn.dataset.url,
+                duration: parseFloat(btn.dataset.duration) || 0
+            });
+            // Attach click event
+            btn.onclick = () => window.playTrack(idx);
+        });
+
+        // Polling logic
+        const hasGeneratingSongs = document.querySelector('.status-generating') !== null;
+        if (hasGeneratingSongs) {
+            console.log("Polling active for generating songs...");
+            setInterval(() => {
+                fetch("/api/poll-status/")
+                .then(r => r.json())
+                .then(data => {
+                    if (data.updated_count > 0) {
+                        window.location.reload();
+                    }
+                })
+                .catch(err => console.error("Polling error:", err));
+            }, 5000);
+        }
+    });
+</script>
+
+</body>
+</html>

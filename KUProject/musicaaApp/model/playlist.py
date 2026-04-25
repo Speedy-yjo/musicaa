@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 
 class Playlist(models.Model):
     name = models.CharField(max_length=255)
-    user = models.ForeignKey('User', on_delete=models.CASCADE, related_name='playlists')
+    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, related_name='playlists')
     songs = models.ManyToManyField('Song', related_name='playlists', blank=True)
 
     def clean(self):
