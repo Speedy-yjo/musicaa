@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ song.name }} — Musicaa</title>
+    <meta name="description" content="Listen to an AI-generated song on Musicaa.">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #f7f9fc;
+            --card: #ffffff;
+            --accent: #6b4ce6;
+            --accent-hover: #5031cc;
+            --text: #2b3044;
+            --muted: #64748b;
+            --border: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 3rem 2.5rem;
+            max-width: 480px;
+            width: 100%;
+            box-shadow: 0 8px 32px rgba(107,76,230,0.08);
+            text-align: center;
+        }
+
+        .logo {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .brand {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 2rem;
+            letter-spacing: 0.04em;
+        }
+
+        .song-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.4rem;
+        }
+
+        .song-meta {
+            color: var(--muted);
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+        }
+
+        audio {
+            width: 100%;
+            margin-bottom: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: var(--accent);
+            color: #fff;
+            padding: 0.75rem 1.8rem;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .footer-note {
+            margin-top: 2rem;
+            font-size: 0.82rem;
+            color: var(--muted);
+        }
+
+        .footer-note a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">🎶</div>
+        <div class="brand">Musicaa</div>
+
+        <h1 class="song-title">{{ song.name }}</h1>
+        <p class="song-meta">
+            AI-generated · {{ song.lengthInSeconds }}s
+        </p>
+
+        {% if song.audio_url %}
+        <audio controls>
+            <source src="{{ song.audio_url }}" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        {% endif %}
+
+        <a href="{% url 'download_shared_song' song.share_token %}" class="btn">
+            ⬇ Download MP3
+        </a>
+
+        <p class="footer-note">
+            Shared anonymously via <a href="/">Musicaa</a>
+        </p>
+    </div>
+</body>
+</html>
